@@ -19,6 +19,14 @@ namespace CarRent.Startup
 
             builder.Services.AddScoped<IRepository, Repository>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowClientApp",
+                    policy => policy.WithOrigins("https://localhost:7091")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
+
             builder.Services.AddControllers();
             builder.Services.AddOpenApiServices();
         }

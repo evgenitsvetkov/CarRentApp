@@ -22,4 +22,8 @@
     <ProjectReference Include="..\CarRent.Core\CarRent.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="app\" />
+  </ItemGroup>
+
 </Project>
