@@ -1,6 +1,6 @@
 ﻿namespace CarRent.Core.Models.Car
 {
-    class CategoryDTO
+    class CategoryServiceModel
     {
         public int Id { get; set; }
 

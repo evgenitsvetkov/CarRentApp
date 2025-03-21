@@ -2,7 +2,7 @@
 
 namespace CarRent.Core.Models.Car
 {
-    public class CarDTO
+    public class CarViewModel
     {
         public int Id { get; set; }
 

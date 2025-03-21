@@ -2,7 +2,7 @@
 
 namespace CarRent.Core.Models.Car
 {
-    public class CarFormDTO
+    public class CarFormModel
     {
         [Required(ErrorMessage = "The {0} field is required")]
         [StringLength(50,
