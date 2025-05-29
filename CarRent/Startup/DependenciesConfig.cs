@@ -22,9 +22,12 @@ namespace CarRent.Startup
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowClientApp",
-                    policy => policy.WithOrigins("https://localhost:7091")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    });
             });
 
             builder.Services.AddControllers();

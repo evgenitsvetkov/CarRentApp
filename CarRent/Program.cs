@@ -23,6 +23,4 @@ app.MapControllers();
 
 app.AddRootEndpoints();
 
-app.MapFallbackToFile("/index.html");
-
 await app.RunAsync();
