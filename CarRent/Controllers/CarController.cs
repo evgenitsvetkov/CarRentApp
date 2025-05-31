@@ -16,55 +16,70 @@ namespace CarRent.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CarDTO>>> GetCars()
+        public async Task<ActionResult<CarQueryModel>> GetCars([FromQuery]CarQueryModel query)
         {
-            var cars = await carService.GetAllCarsAsync();
-            return Ok(cars);
+            var result = await carService.GetAllCarsAsync(
+                query.Category,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                query.CarsPerPage);
+
+            query.TotalCarsCount = result.TotalCarsCount;
+            query.Cars = result.Cars;
+            query.Categories = await carService.AllCategoriesNamesAsync();
+
+            return Ok(query);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CarDTO>> GetCar(int id)
+        public async Task<ActionResult<CarDetailsDto>> GetCar(int id)
         {
             if (await carService.CarExistAsync(id) == false)
             {
                 return NotFound();
             }
 
-            var car = await carService.GetCarDetailsById(id);
+            var carModel = await carService.GetCarDetailsByIdAsync(id);
 
-            return Ok(car);
+            return Ok(carModel);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCar(int id, CarFormDTO editedCarDto)
+        public async Task<IActionResult> PutCar(int id, CarFormDto carModel)
         {
             if (await carService.CarExistAsync(id) == false)
             {
                 return NotFound();
             }
 
-            //ModelState.IsValid 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            await carService.EditCarAsync(id, editedCarDto);
+            await carService.EditCarAsync(id, carModel);
 
-            var editedCar = await carService.GetCarDetailsById(id);
-            
-            return Ok(editedCar);
+            return NoContent();
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostCar(CarFormDTO carDto)
+        public async Task<ActionResult<CarDetailsDto>> PostCar(CarFormDto carModel)
         {
-            if (await carService.CategoryExistsAsync(carDto.CategoryId) == false)
+            if (await carService.CategoryExistsAsync(carModel.CategoryId) == false)
             {
-                ModelState.AddModelError(nameof(carDto.CategoryId), "Category not found!");
+                ModelState.AddModelError(nameof(carModel.CategoryId), "Category not found!");
             }
 
-            //ModelState.IsValid 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            var newCarId = await carService.CreateCarAsync(carDto);
+            var newCarId = await carService.CreateCarAsync(carModel);
+            var newCarModel = await carService.GetCarDetailsByIdAsync(newCarId);
             
-            return RedirectToAction(nameof(GetCar), new { id = newCarId });
+            return CreatedAtAction(nameof(GetCar), new { id = newCarId }, newCarModel);
         }
 
         [HttpDelete("{id}")]
@@ -78,6 +93,14 @@ namespace CarRent.Controllers
             await carService.DeleteCarAsync(id);
 
             return NoContent();
+        }
+
+        [HttpGet("Categories")]
+        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
+        {
+            var categories = await carService.AllCategoriesAsync();
+
+            return Ok(categories);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace CarRent.Core.Models.Car
 {
-    public class CarFormModel
+    public class CarFormDto
     {
         [Required(ErrorMessage = "The {0} field is required")]
         [StringLength(50,
@@ -38,11 +38,12 @@ namespace CarRent.Core.Models.Car
         [Range(typeof(int),
             "1",
             "10",
-            ErrorMessage = "The field {0} must be between {2} and {1} characters long")]
+            ErrorMessage = "The field {0} must be between {1} and {2} characters long")]
         [Display(Name = "Seats Number")]
         public int SeatsNumber { get; set; }
 
         [Required(ErrorMessage = "The {0} field is required")]
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
         [Required(ErrorMessage = "The {0} field is required")]

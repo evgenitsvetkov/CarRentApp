@@ -1,4 +1,5 @@
 ﻿using CarRent.Core.Contracts;
+using CarRent.Core.Enumerations;
 using CarRent.Core.Models.Car;
 using CarRent.Infrastructure.Data.Common;
 using CarRent.Infrastructure.Data.Models.Cars;
@@ -15,23 +16,60 @@ namespace CarRent.Core.Services
                 repository = _repository;
         }
 
-        public async Task<IEnumerable<CarDTO>> GetAllCarsAsync()
+        public async Task<CarQueryResultDto> GetAllCarsAsync(
+            string? category = null,
+            string? searchTerm = null,
+            CarSorting sorting = CarSorting.Newest,
+            int currentPage = 1,
+            int carsPerPage = 1)
         {
-            return await repository.AllReadOnly<Car>()
-                .Select(x => new CarDTO()
+            var carsToShow = repository.AllReadOnly<Car>();
+
+            if (category != null)
+            {
+                carsToShow = carsToShow
+                    .Where(m => m.Category.Name == category);
+            }
+
+            if (searchTerm != null)
+            {
+                string normalizedSearchTerm = searchTerm.ToLower();
+                carsToShow = carsToShow
+                    .Where(c => (c.Make.ToLower().Contains(normalizedSearchTerm) ||
+                                c.Model.ToLower().Contains(normalizedSearchTerm)));
+            }
+
+            carsToShow = sorting switch
+            {
+                CarSorting.LowestPrice => carsToShow.OrderBy(m => m.Price),
+                CarSorting.HighestPrice => carsToShow.OrderByDescending(m => m.Price),
+                CarSorting.Oldest => carsToShow.OrderBy(m => m.Id),
+                _ => carsToShow.OrderByDescending(m => m.Id),
+            };
+
+            var cars = await carsToShow
+                .Skip((currentPage - 1) * carsPerPage)
+                .Take(carsPerPage)
+                .Select(x => new CarDto()
                 {
                     Id = x.Id,
                     Make = x.Make,
                     Model = x.Model,
                     Category = x.Category.Name,
-                    BodyType = x.BodyType,
-                    FuelType = x.FuelType,
                     Price = x.Price,
                     SeatsNumber = x.SeatsNumber,
                     Year = x.Year,
                     ImageURL = x.ImageURL
                 })
                 .ToListAsync();
+
+            int totalCars = await carsToShow.CountAsync();
+
+            return new CarQueryResultDto()
+            {
+                Cars = cars,
+                TotalCarsCount = totalCars,
+            };
         }
 
         public async Task<IEnumerable<string>> AllCategoriesNamesAsync()
@@ -42,23 +80,23 @@ namespace CarRent.Core.Services
                 .ToListAsync();
         }
 
-        public async Task<CarDTO> GetCarDetailsById(int carId)
+        public async Task<CarDetailsDto> GetCarDetailsByIdAsync(int carId)
         {
             return await repository.AllReadOnly<Car>()
                 .Where(c => c.Id == carId)
-                .Select(c => new CarDTO()
-            {
+                .Select(c => new CarDetailsDto()
+                {
                     Id = c.Id,
                     Make = c.Make,
                     Model = c.Model,
                     Category = c.Category.Name,
-                    BodyType = c.BodyType,
-                    FuelType = c.FuelType,
                     Price = c.Price,
                     SeatsNumber = c.SeatsNumber,
                     Year = c.Year,
-                    ImageURL = c.ImageURL 
-            }).FirstAsync();
+                    ImageURL = c.ImageURL, 
+                    FuelType = c.FuelType,
+                    BodyType = c.BodyType
+                }).FirstAsync();
         }
 
         public async Task<bool> CarExistAsync(int carId)
@@ -73,7 +111,7 @@ namespace CarRent.Core.Services
                 .AnyAsync(c => c.Id == categoryId);
         }
 
-        public async Task<int> CreateCarAsync(CarFormDTO createDto)
+        public async Task<int> CreateCarAsync(CarFormDto createDto)
         {
             Car car = new Car()
             {
@@ -100,7 +138,7 @@ namespace CarRent.Core.Services
             await repository.SaveChangesAsync();
         }
 
-        public async Task EditCarAsync(int carId, CarFormDTO createDto)
+        public async Task EditCarAsync(int carId, CarFormDto createDto)
         {
             var car = await repository.All<Car>()
                 .FirstOrDefaultAsync(c => c.Id == carId);
@@ -119,6 +157,16 @@ namespace CarRent.Core.Services
 
                 await repository.SaveChangesAsync();
             }                
+        }
+
+        public async Task<IEnumerable<CategoryDto>> AllCategoriesAsync()
+        {
+            return await repository.AllReadOnly<Category>()
+                .Select(c => new CategoryDto()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                }).ToListAsync();
         }
     }
 }

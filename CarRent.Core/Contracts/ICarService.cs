@@ -1,24 +1,32 @@
-﻿using CarRent.Core.Models.Car;
+﻿using CarRent.Core.Enumerations;
+using CarRent.Core.Models.Car;
 using CarRent.Infrastructure.Data.Common;
 
 namespace CarRent.Core.Contracts
 {
     public interface ICarService
     {
-        Task<IEnumerable<CarDTO>> GetAllCarsAsync();
+        Task<CarQueryResultDto> GetAllCarsAsync(
+             string? category = null,
+            string? searchTerm = null,
+            CarSorting sorting = CarSorting.Newest,
+            int currentPage = 1,
+            int carsPerPage = 1);
 
         Task<bool> CarExistAsync(int carId);
 
-        Task<int> CreateCarAsync(CarFormDTO createDto);
+        Task<int> CreateCarAsync(CarFormDto createDto);
 
         Task<bool> CategoryExistsAsync(int categoryId);
 
+        Task<IEnumerable<CategoryDto>> AllCategoriesAsync();
+
         Task<IEnumerable<string>> AllCategoriesNamesAsync();
 
-        Task EditCarAsync(int carId, CarFormDTO createDto);
+        Task EditCarAsync(int carId, CarFormDto createDto);
 
         Task DeleteCarAsync(int carId);
 
-        Task<CarDTO> GetCarDetailsById(int carId);
+        Task<CarDetailsDto> GetCarDetailsByIdAsync(int carId);
     }
 }
