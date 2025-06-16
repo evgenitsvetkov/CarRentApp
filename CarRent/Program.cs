@@ -1,4 +1,3 @@
-using CarRent.Endpoints;
 using CarRent.Startup;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +19,5 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.AddRootEndpoints();
 
 await app.RunAsync();
