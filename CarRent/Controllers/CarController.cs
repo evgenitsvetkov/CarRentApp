@@ -1,6 +1,8 @@
 ﻿using CarRent.Core.Contracts;
 using CarRent.Core.Models.Car;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static CarRent.Core.Constants.RoleConstants;
 
 namespace CarRent.Controllers
 {
@@ -45,6 +47,7 @@ namespace CarRent.Controllers
             return Ok(carModel);
         }
 
+        [Authorize(Roles = AdminRole)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCar(int id, CarFormDto carModel)
         {
@@ -63,6 +66,7 @@ namespace CarRent.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = AdminRole)]
         [HttpPost]
         public async Task<ActionResult<CarDetailsDto>> PostCar(CarFormDto carModel)
         {
@@ -82,6 +86,7 @@ namespace CarRent.Controllers
             return CreatedAtAction(nameof(GetCar), new { id = newCarId }, newCarModel);
         }
 
+        [Authorize(Roles = AdminRole)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCar(int id)
         {

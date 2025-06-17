@@ -17,5 +17,8 @@ namespace CarRent.Infrastructure.Data.Models.CustomUser
         [Required]
         [Comment("User's hashed password")]
         public string PasswordHash { get; set; } = string.Empty;
+
+        [Comment("User's role")]
+        public string Role { get; set; } = string.Empty;
     }
 }
