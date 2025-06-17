@@ -20,5 +20,9 @@ namespace CarRent.Infrastructure.Data.Models.CustomUser
 
         [Comment("User's role")]
         public string Role { get; set; } = string.Empty;
+
+        public string? RefreshToken { get; set; }
+
+        public DateTime? RefreshTokenExpiryTime { get; set; }
     }
 }
