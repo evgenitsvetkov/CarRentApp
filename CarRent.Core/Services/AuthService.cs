@@ -27,7 +27,7 @@ namespace CarRent.Core.Services
         public async Task<TokenResponseDto?> LoginAsync(UserDto request)
         {
             var user = await repository.All<User>()
-                .FirstOrDefaultAsync(u => u.Username == request.Username);
+                .FirstOrDefaultAsync(u => u.Username.ToLower() == request.Username.ToLower());
 
             if (user == null)
             {
@@ -48,7 +48,7 @@ namespace CarRent.Core.Services
         public async Task<User?> RegisterAsync(UserDto request)
         {
             var isUserExist = await repository.AllReadOnly<User>()
-                .AnyAsync(u => u.Username == request.Username);
+                .AnyAsync(u => u.Username.ToLower() == request.Username.ToLower());
 
             if (isUserExist)
             {
@@ -59,7 +59,7 @@ namespace CarRent.Core.Services
             var hashedPassword = new PasswordHasher<User>()
                 .HashPassword(newUser, request.Password);
 
-            newUser.Username = request.Username;
+            newUser.Username = request.Username.ToLower();
             newUser.PasswordHash = hashedPassword;
 
             await repository.AddAsync(newUser);

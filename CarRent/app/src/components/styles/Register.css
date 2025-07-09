@@ -1,0 +1,121 @@
+﻿.register-container {
+    max-width: 25rem;
+    margin: auto;
+    margin-top: 5rem;
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background-color: #2c3e50;
+    color: white;
+}
+
+.success-container {
+    background-color: #2c3e50;
+    color: white;
+}
+
+.error-msg {
+    color: red;
+    background-color: pink;
+    min-height: 3rem;
+    border-radius: 0.5rem;
+    align-content: center;
+    margin-top: 0rem;
+    margin-bottom: 0.5rem;
+}
+
+h1 {
+    margin-top: 0rem;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-form label {
+    font-weight: initial;
+    text-align: left;
+    display: block;
+    margin-top: 1rem;
+    color: white;
+}
+
+label > .valid {
+    font-size: 1.2rem;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+    color: lightgreen;
+}
+
+label > .invalid {
+    font-size: 1.2rem;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+    color: red;
+}
+
+label > .hide {
+    position: absolute;
+    left: -9999px;
+}
+
+.register-form input {
+    width: inherit;
+    padding: 0.5rem;
+    margin-top: 0.2rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+}
+
+.offscreen {
+    position: absolute;
+    left: -9999px;
+}
+
+.instructions {
+    text-align: left;
+    color: white;
+    background-color: black;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0rem;
+}
+
+p > svg {
+    margin-right: 0.3rem;
+}
+
+.btn-sign-up {
+    width: inherit;
+    height: 3.5rem;
+    padding: 0.5rem;
+    margin-top: 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.btn-sign-up:hover {
+    background-color: gray;
+}
+
+.btn-sign-up:disabled {
+    cursor:not-allowed;
+}
+
+.register-container > p:nth-of-type(2) {
+    text-align: left;
+    color: lightgray;
+}
+
+.line > a {
+    color: lightgray;
+}
+

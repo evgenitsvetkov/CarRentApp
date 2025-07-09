@@ -28,7 +28,7 @@ namespace CarRent.Controllers
 
             if (user == null)
             {
-                return BadRequest("Username already exists.");
+                return Conflict("This username already exist.");
             }
 
             return Ok(user);
