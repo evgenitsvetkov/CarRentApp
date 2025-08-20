@@ -1,0 +1,35 @@
+﻿.unauthorized-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+}
+
+.unauthorized-title {
+    color: red;
+    font-size: 3rem;
+    margin-bottom: 0;
+}
+
+.unauthorized-container p {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.unauthorized-container button {
+    background-color: #007bff;
+    color: white;
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    margin: 0.5rem;
+}
+
+.unauthorized-container button:hover {
+    background-color: #0056b3;
+}
