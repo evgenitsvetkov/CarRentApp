@@ -4,6 +4,10 @@ import Layout from "./components/Layout";
 import Cars from "./components/Cars";
 import AddCar from "./components/AddCar";
 import CarDetails from "./components/CarDetails";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import RequireAuth from "./components/RequireAuth";
+import Unauthorized from "./components/Unauthorized";
 
 const router = createBrowserRouter([
     {
@@ -13,7 +17,17 @@ const router = createBrowserRouter([
             { path: "/", element: <App /> },
             { path: "/Cars", element: <Cars /> },
             { path: "/Cars/Details/:id", element: <CarDetails /> },
-            { path: "/Cars/Add", element: <AddCar /> },
+            {
+                path: "/Cars/Add",
+                element: (
+                    <RequireAuth requiredRole="Administrator">
+                        <AddCar />
+                    </RequireAuth>
+                )
+            },
+            { path: "/Login", element: <Login /> },
+            { path: "/Register", element: <Register /> },
+            { path: "/Unauthorized", element: <Unauthorized /> },
         ],
     },
 ]);
