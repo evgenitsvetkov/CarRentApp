@@ -51,12 +51,12 @@ const carService = {
         }
     },
 
-    updateCar: async (id, carData) => {
+    editCar: async (id, carData) => {
         try {
             const response = await apiClient.put(`/api/Car/${id}`, carData);
             return response.data;
         } catch (error) {
-            console.error("Error while updating the car: ", error);
+            console.error("Error while editing the car: ", error);
             throw error;
         }
     },
