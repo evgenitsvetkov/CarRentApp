@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import carService from '../api/carService';
+import useCarService from '../hooks/useCarService';
 import "./styles/AddCar.css";
 
 const AddCar = () => {
@@ -18,11 +18,12 @@ const AddCar = () => {
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const carApi = useCarService();
 
     useEffect(() => {
         const fetchCarCategories = async () => {
             try {
-                const categoriesData = await carService.getCarCategories();
+                const categoriesData = await carApi.getCarCategories();
                 setCategories(categoriesData);
             } catch (error) {
                 console.error("Failed to fetch car categories: ", error);
@@ -57,7 +58,7 @@ const AddCar = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await carService.addCar(car);
+            await carApi.addCar(car);
             setCar({
                 make: "",
                 model: "",
@@ -69,9 +70,10 @@ const AddCar = () => {
                 bodyType: "",
                 imageURL: "",
             });
+
             navigate("/Cars");
         } catch (error) {
-            setError("Failed to add car. Please check your input.");
+            setError("Failed to add a car. Please check your input.");
             console.error("Error while adding a car: ", error);
         }
     };

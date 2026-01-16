@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from "react-router-dom";
-import carService from "../api/carService";
+import useCarService from '../hooks/useCarService';
 import CarCard from "./CarCard";
 import Search from "./Search";
 import Pagination from "./Pagination";
@@ -17,13 +17,14 @@ const Cars = () => {
     const searchTerm = searchParams.get("searchTerm") || "";
     const category = searchParams.get("category") || "";
     const sorting = parseInt(searchParams.get("sorting")) || 0;
+    const carApi = useCarService();
 
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this car?");
         if (!confirmDelete) return;
 
         try {
-            await carService.deleteCar(id);
+            await carApi.deleteCar(id);
             setCars(cars.filter((car) => car.id !== id));
         } catch (error) {
             console.error("Failed to delete the car: ", error);
@@ -33,7 +34,7 @@ const Cars = () => {
     useEffect(() => {
         const fetchCars = async () => {
             try {
-                const carsData = await carService.getAllCars(page, searchTerm, category, sorting);
+                const carsData = await carApi.getAllCars(page, searchTerm, category, sorting);
                 const maxPage = Math.ceil(parseInt(carsData.totalCarsCount) / parseInt(carsData.carsPerPage));
                 
                 setCars(carsData.cars);
@@ -47,7 +48,7 @@ const Cars = () => {
 
         const fetchCategories = async () => {
             try {
-                const categories = await carService.getCarCategories();
+                const categories = await carApi.getCarCategories();
                 setCategoriesData(categories);
             } catch (error) {
                 console.error("Failed to fetch car categories: ", error);
@@ -70,8 +71,8 @@ const Cars = () => {
     };
 
     return (
-        <div className="container">
-            <h1>Available Cars</h1>
+        <div className="cars-container">
+            <h1 className="cars-title">Available Cars</h1>
             {loading ? (
                 <p className="loading-message">Loading...</p>
             ) : (

@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
-import authService from '../api/authService';
+import useAuthService from '../hooks/useAuthService';
 import './styles/Login.css';
 
 const Login = () => {
@@ -18,6 +18,8 @@ const Login = () => {
     const [pwd, setPwd] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
 
+    const authApi = useAuthService();
+
     useEffect(() => {
         userRef.current.focus();
     }, []);
@@ -30,7 +32,7 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            var response = await authService.loginUser({ username: user, password: pwd });
+            var response = await authApi.loginUser({ username: user, password: pwd });
 
             const accessToken = response?.accessToken;
             const refreshToken = response?.refreshToken;

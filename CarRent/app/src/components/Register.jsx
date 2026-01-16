@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { faCheck, faTimes, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import authService from '../api/authService';
+import useAuthService from '../hooks/useAuthService';
 import "./styles/Register.css";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{4,50}$/;
@@ -28,6 +28,7 @@ const Register = () => {
     const [isSuccess, setIsSuccess] = useState(false);
 
     const normalizedUsername = user.trim().toLowerCase();
+    const authApi = useAuthService();
 
     useEffect(() => {
         userRef.current.focus();
@@ -62,7 +63,7 @@ const Register = () => {
         }
         
         try {
-            await authService.registerUser({ username: normalizedUsername, password: pwd });
+            await authApi.registerUser({ username: normalizedUsername, password: pwd });
 
             setIsSuccess(true);
             setUser('');
@@ -91,7 +92,7 @@ const Register = () => {
             ) : (
                 <div className="register-container">
                     <p ref={errorRef} className={errorMsg ? "error-msg" : "offscreen"} aria-live="assertive">{errorMsg}</p>
-                    <h1>Register</h1>
+                    <h1 className="register-title">Register</h1>
                     <form className="register-form" onSubmit={handleSubmit}>
                         <label htmlFor="username">
                             Username:

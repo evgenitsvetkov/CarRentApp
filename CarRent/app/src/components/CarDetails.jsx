@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import carService from '../api/carService';
+import useCarService from '../hooks/useCarService';
 import "./styles/CarDetails.css";
 
 const CarDetails = () => {
     const { id } = useParams();
     const [car, setCar] = useState(null);
     const navigate = useNavigate();
+    const carApi = useCarService();
 
     useEffect(() => {
         const fetchCarDetails = async () => {
             try {
-                const carData = await carService.getCar(id);
+                const carData = await carApi.getCar(id);
                 setCar(carData);
             } catch (error) {
                 console.error("Error while fetching car details: ", error);
