@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import RequireAuth from "./components/RequireAuth";
 import Unauthorized from "./components/Unauthorized";
+import EditCar from "./components/EditCar";
 
 const router = createBrowserRouter([
     {
@@ -22,6 +23,14 @@ const router = createBrowserRouter([
                 element: (
                     <RequireAuth requiredRole="Administrator">
                         <AddCar />
+                    </RequireAuth>
+                )
+            },
+            {
+                path: "/Cars/Edit/:id",
+                element: (
+                    <RequireAuth requiredRole="Administrator">
+                        <EditCar />
                     </RequireAuth>
                 )
             },
