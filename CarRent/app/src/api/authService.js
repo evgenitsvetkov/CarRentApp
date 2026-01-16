@@ -1,47 +1,18 @@
-﻿import axios from 'axios';
-
-const API_BASE_URL = "https://localhost:7091";
-
-const apiClient = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-        "Content-Type": "application/json",
-    },
-});
-
-const authService = {
+﻿
+export const authService = (apiClient) => ({
 
     loginUser: async (userData) => {
-        try {
-            const response = await apiClient.post('api/Auth/login', userData);
-            const accessToken = response.data.accessToken;
-
-            return response.data;
-        } catch (error) {
-            console.error("Error while login the user: ", error);
-            throw error;
-        }
+        const response = await apiClient.post('api/Auth/login', userData);
+        return response.data;
     },
 
     registerUser: async (userData) => {
-        try {
-            const response = await apiClient.post('api/Auth/register', userData);
-            return response.data;
-        } catch (error) {
-            console.error("Error while register the user: ", error);
-            throw error;
-        }
+        const response = await apiClient.post('api/Auth/register', userData);
+        return response.data;
     },
 
-    refreshUserToken: async () => {
-        try {
-            const response = await apiClient.post('api/Auth/refresh-token');
-            return response.data;
-        } catch (error) {
-            console.error("Error while refresh user's token: ", error);
-            throw error;
-        }
+    refreshUserToken: async (userData) => {
+        const response = await apiClient.post('api/Auth/refresh-token', userData);
+        return response.data;
     } 
-};
-
-export default authService;
+});
