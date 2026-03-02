@@ -1,6 +1,7 @@
 ﻿using CarRent.Core.Contracts;
 using CarRent.Core.Models.User;
 using CarRent.Infrastructure.Data.Models.CustomUser;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRent.Controllers
@@ -17,7 +18,7 @@ namespace CarRent.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto request)
+        public async Task<IActionResult> Register(UserDto request)
         {
             if (!ModelState.IsValid) 
             {
@@ -31,11 +32,11 @@ namespace CarRent.Controllers
                 return Conflict("This username already exist.");
             }
 
-            return Ok(user);
+            return Ok();
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<TokenResponseDto>> Login(UserDto request)
+        public async Task<IActionResult> Login(UserDto request)
         {
             var result = await authService.LoginAsync(request);
 
@@ -44,20 +45,49 @@ namespace CarRent.Controllers
                 return BadRequest("Invalid username or password.");
             }
 
-            return Ok(result);
+            Response.Cookies.Append(
+                "refreshToken",
+                result.RefreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Path = "/",
+                    MaxAge = TimeSpan.FromDays(7)
+                });
+            var date = DateTime.UtcNow.AddDays(7);
+            return Ok(new { accessToken = result.AccessToken });
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
+        public async Task<IActionResult> RefreshToken()
         {
-            var result = await authService.RefreshTokensAsync(request);
+            if (!Request.Cookies.TryGetValue("refreshToken", out string? refreshToken))
+            {
+                return Unauthorized();
+            }
+
+            var result = await authService.RefreshTokensAsync(refreshToken);
 
             if (result == null || result.AccessToken == null || result.RefreshToken == null)
             {
                 return Unauthorized("Invalid refresh token.");
             }
 
-            return Ok(result);
+            Response.Cookies.Append(
+                "refreshToken",
+                result.RefreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Path = "/",
+                    MaxAge = TimeSpan.FromDays(7)
+                });
+
+            return Ok(new { accessToken = result.AccessToken });
         }
     }
 }

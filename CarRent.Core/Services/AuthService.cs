@@ -68,9 +68,9 @@ namespace CarRent.Core.Services
             return newUser;
         }
 
-        public async Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto requestToken)
+        public async Task<TokenResponseDto?> RefreshTokensAsync(string refreshToken)
         {
-            var user = await ValidateRefreshTokenAsync(requestToken.UserId, requestToken.RefreshToken);
+            var user = await ValidateRefreshTokenAsync(refreshToken);
 
             if (user == null)
             {
@@ -89,10 +89,10 @@ namespace CarRent.Core.Services
             };
         }
 
-        private async Task<User?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
+        private async Task<User?> ValidateRefreshTokenAsync(string refreshToken)
         {
-            var user = await repository.GetByIdAsync<User>(userId);
-
+            var user = await repository.All<User>().FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+            
             if (user == null 
                 || user.RefreshToken != refreshToken 
                 || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
@@ -140,7 +140,7 @@ namespace CarRent.Core.Services
                 issuer: configuration.GetValue<string>("AppSettings:Issuer"),
                 audience: configuration.GetValue<string>("AppSettings:Audience"),
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
+                expires: DateTime.UtcNow.AddHours(6),
                 signingCredentials: creds
             );
 

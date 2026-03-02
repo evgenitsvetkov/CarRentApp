@@ -9,6 +9,6 @@ namespace CarRent.Core.Contracts
 
         Task<TokenResponseDto?> LoginAsync(UserDto request);
 
-        Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto requestToken); 
+        Task<TokenResponseDto?> RefreshTokensAsync(string refreshToken); 
     }
 }
