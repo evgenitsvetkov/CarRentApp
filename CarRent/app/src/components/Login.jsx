@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import useAuth from '../hooks/useAuth';
 import useAuthService from '../hooks/useAuthService';
 import './styles/Login.css';
@@ -17,7 +18,6 @@ const Login = () => {
     const [user, setUser] = useState('');
     const [pwd, setPwd] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
-
     const authApi = useAuthService();
 
     useEffect(() => {
@@ -35,9 +35,11 @@ const Login = () => {
             var response = await authApi.loginUser({ username: user, password: pwd });
 
             const accessToken = response?.accessToken;
-            const refreshToken = response?.refreshToken;
 
-            setAuth({ user, pwd, accessToken, refreshToken });
+            const decoded = jwtDecode(accessToken);
+            const roleClaim = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+            setAuth({ accessToken, role: roleClaim });
             setUser('');
             setPwd('');
             navigate(from, { replace: true });

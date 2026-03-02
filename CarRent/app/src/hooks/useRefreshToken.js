@@ -3,38 +3,35 @@ import useAuthService from '../hooks/useAuthService';
 import useAuth from './useAuth';
 
 const useRefreshToken = () => {
-    const { auth, setAuth } = useAuth();
+    const { setAuth } = useAuth();
     const authApi = useAuthService();
+
 
     const refresh = async () => {
         try {
-            const token = auth?.accessToken;
-            const decoded = jwtDecode(token);
+            const data = await authApi.refreshUserToken();
 
-            const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-            const refreshToken = auth?.refreshToken;
+            if (data?.accessToken) {
+                const decoded = jwtDecode(data.accessToken);
+                const roleClaim = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-            if (!userId || !refreshToken) {
-                throw new Error("Missing user credentials for token refresh.");
-            }
-
-            const response = await authApi.refreshUserToken(userId, refreshToken);
-            
-            if (response?.data.accessToken && response?.data.refreshToken) {
                 setAuth(prev => {
+                    console.log(JSON.stringify(prev));
+                    console.log(data.accessToken);
                     return {
                         ...prev,
-                        accessToken: response.data.accessToken,
-                        refreshToken: response.data.refreshToken,
+                        accessToken: data.accessToken,
+                        role: roleClaim,
                     }
                 });
-                return response.data.accessToken;
+                return data.accessToken;
             } else {
                 throw new Error("Invalid refresh response from server.");
             }
         } catch (error) {
             console.error("Token refresh failed: ", error);
-            return null;
+            setAuth(null);
+            throw error;
         }
     };
     return refresh;
