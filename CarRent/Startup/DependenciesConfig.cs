@@ -44,9 +44,10 @@ namespace CarRent.Startup
                 options.AddPolicy("AllowClientApp",
                     policy =>
                     {
-                        policy.AllowAnyOrigin()
+                        policy.WithOrigins("https://localhost:3000")
+                              .AllowAnyHeader()
                               .AllowAnyMethod()
-                              .AllowAnyHeader();
+                              .AllowCredentials();
                     });
             });
 
