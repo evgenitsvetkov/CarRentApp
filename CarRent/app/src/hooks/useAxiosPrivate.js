@@ -23,7 +23,10 @@ const useAxiosPrivate = () => {
             async (error) => {
                 const prevRequest = error?.config;
 
-                if (error?.response?.status === 401 && !prevRequest?.sent) {
+                if (error?.response?.status === 401 &&
+                    !prevRequest?.sent &&
+                    !prevRequest?.url.includes("/auth/refresh"))
+                {
                     prevRequest.sent = true;
                     const newAccessToken = await refresh();
                     prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
@@ -39,7 +42,7 @@ const useAxiosPrivate = () => {
             axiosPrivate.interceptors.response.eject(responseInterceptor);
         }
 
-    },[auth, refresh]);
+    },[auth?.accessToken, refresh]);
 
     return axiosPrivate;
 };
