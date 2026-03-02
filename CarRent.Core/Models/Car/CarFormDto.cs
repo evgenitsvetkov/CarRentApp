@@ -29,7 +29,7 @@ namespace CarRent.Core.Models.Car
         [Required(ErrorMessage = "The {0} field is required")]
         [Range(typeof(decimal),
             "0",
-            "1000",
+            "1000000",
             ConvertValueInInvariantCulture = true,
             ErrorMessage = "Price must be a positive number and less than {2} leva")]
         public decimal Price { get; set; }
@@ -47,7 +47,7 @@ namespace CarRent.Core.Models.Car
         public int CategoryId { get; set; }
 
         [Required(ErrorMessage = "The {0} field is required")]
-        [StringLength(10,
+        [StringLength(11,
             MinimumLength = 3,
             ErrorMessage = "The field {0} must be between {2} and {1} characters long")]
         [Display(Name = "Body Type")]

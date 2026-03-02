@@ -48,7 +48,7 @@ namespace CarRent.Infrastructure.Data.Models.Cars
         public Category Category { get; set; } = null!;
 
         [Required]
-        [MaxLength(10)]
+        [MaxLength(11)]
         [Comment("Car's body type")]
         public string BodyType { get; set; } = null!;
 
