@@ -1,7 +1,7 @@
 import React from "react";
-import "./styles/App.css";
+import "./styles/Home.css";
 
-function App() {
+function Home() {
     return (
         <div className="app-container">
             <h1>Car Management System</h1>
@@ -11,4 +11,4 @@ function App() {
     );
 }
 
-export default App;
+export default Home;
