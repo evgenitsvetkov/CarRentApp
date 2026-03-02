@@ -1,18 +1,17 @@
-﻿
-export const authService = (apiClient) => ({
+﻿export const authService = (apiClient) => ({
 
     loginUser: async (userData) => {
-        const response = await apiClient.post('api/Auth/login', userData);
+        const response = await apiClient.post('Auth/login', userData);
         return response.data;
     },
 
     registerUser: async (userData) => {
-        const response = await apiClient.post('api/Auth/register', userData);
+        const response = await apiClient.post('Auth/register', userData);
         return response.data;
     },
 
-    refreshUserToken: async (userData) => {
-        const response = await apiClient.post('api/Auth/refresh-token', userData);
+    refreshUserToken: async () => {
+        const response = await apiClient.post('Auth/refresh-token');
         return response.data;
-    } 
+    }
 });
