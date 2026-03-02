@@ -73,6 +73,27 @@ login-title {
     cursor: not-allowed;
 }
 
+.persistCheck {
+    font-size: 1rem;
+    margin-top:0.51rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    height: 1.5rem;
+    width: 9rem;
+}
+
+.persistCheck > label {
+    margin: 0;
+}
+
+.persistCheck > input {
+    height: 1.2rem;
+    width: 1.2rem;
+    margin: 0 5px 2px 2px; 
+}
+
+
 .login-container > p:nth-of-type(2) {
     text-align: left;
     color: lightgray;

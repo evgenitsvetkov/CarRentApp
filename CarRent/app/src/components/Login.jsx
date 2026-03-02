@@ -6,7 +6,7 @@ import useAuthService from '../hooks/useAuthService';
 import './styles/Login.css';
 
 const Login = () => {
-    const { setAuth } = useAuth();
+    const { setAuth, persist, setPersist } = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -57,6 +57,14 @@ const Login = () => {
         }
     };
 
+    const togglePersist = () => {
+        setPersist(prev => !prev);
+    };
+
+    useEffect(() => {
+        localStorage.setItem("persist", persist);
+    }, [persist]);
+
     return (
         <div className="login-container">
             <p ref={errorRef} className={errorMsg ? "error-msg" : "offscreen"} aria-live="assertive">{errorMsg}</p>
@@ -81,6 +89,10 @@ const Login = () => {
                     required
                 />
                 <button type="submit" className="btn-sign-in" disabled={!user || !pwd ? true : false}>Sign In</button>
+                <div className="persistCheck">
+                    <input type="checkbox" id="persist" onChange={togglePersist} checked={persist} />
+                    <label htmlFor="persist">Trust This Device</label>
+                </div>
             </form>
             <p>
                 Need an Account?<br />
